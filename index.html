@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<title>MAFIA cleaning — клининг для дома и офиса</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#ebe9e5;          /* светлый фон как на скриншоте */
+    --bg-soft:#dcdad6;
+    --ink:#0e0e0e;         /* почти чёрный */
+    --dark:#0a0a0a;        /* тёмные секции */
+    --muted:#6b6b6b;
+    --line:rgba(0,0,0,.15);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:'Montserrat',Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.5}
+  a{color:inherit;text-decoration:none}
+  .wrap{max-width:1200px;margin:0 auto;padding:0 24px}
+  .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+  /* верхняя полоска */
+  .topbar{background:var(--dark);color:#fff;font-size:11px;letter-spacing:.08em;padding:8px 0}
+  .topbar .wrap{display:flex;justify-content:space-between;gap:16px}
+
+  /* меню */
+  header nav{display:flex;align-items:center;justify-content:space-between;padding:26px 0}
+  header nav ul{display:flex;gap:28px;list-style:none;font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase}
+  .logo{font-weight:800;font-size:46px;letter-spacing:.2em;padding-left:.2em;text-align:center;line-height:1}
+  .logo small{display:block;font-size:14px;letter-spacing:.55em;padding-left:.55em;font-weight:500;margin-top:8px}
+  .nav-phone{display:inline-flex;align-items:center;gap:10px;font-size:17px;font-weight:800;letter-spacing:.04em;white-space:nowrap;background:var(--ink);color:#fff;padding:12px 20px;border:1px solid var(--ink);transition:background .2s,color .2s}
+  .nav-phone::before{content:"";width:9px;height:9px;border-radius:50%;background:#3ddc84;box-shadow:0 0 0 0 rgba(61,220,132,.7);animation:ping 2s infinite}
+  .nav-phone:hover{background:transparent;color:var(--ink)}
+  @keyframes ping{70%{box-shadow:0 0 0 9px rgba(61,220,132,0)}100%{box-shadow:0 0 0 0 rgba(61,220,132,0)}}
+  .phone-big{display:inline-block;margin-top:22px;font-size:clamp(22px,3vw,32px);font-weight:800;letter-spacing:.02em;border-bottom:2px solid currentColor;padding-bottom:4px}
+
+  /* главный экран: мужчина с распылителем по центру */
+  .hero{position:relative;overflow:hidden;padding:30px 0 50px;
+    background:
+      radial-gradient(ellipse at 50% 80%, rgba(120,120,120,.30), transparent 55%),
+      var(--bg)}
+  .hero .wrap{display:flex;flex-direction:column;min-height:680px}
+  .hero .tagline{position:absolute;left:24px;top:0;font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;line-height:1.7;z-index:2}
+  .hero-stage{position:relative;flex:1;display:flex;justify-content:center;align-items:flex-end;margin:0 0 30px;min-height:540px}
+
+  /* огромная надпись MAFIA за мужчиной */
+  .hero-word{
+    position:absolute;left:50%;top:46%;transform:translate(-50%,-50%);
+    z-index:0;margin:0;white-space:nowrap;user-select:none;pointer-events:none;
+    font-family:'Montserrat',Arial,sans-serif;font-weight:800;
+    font-size:clamp(84px,25vw,310px);line-height:1;letter-spacing:-.02em;
+    color:var(--ink)}
+
+  .hero-man{position:relative;z-index:1;height:min(66vh,580px);min-height:420px;width:auto;display:block}
+  .hero-stage::after{ /* тень под ногами */
+    content:"";position:absolute;bottom:-6px;left:50%;transform:translateX(-45%);
+    width:min(420px,70%);height:26px;border-radius:50%;
+    background:radial-gradient(ellipse at center,rgba(0,0,0,.35),transparent 70%);z-index:0}
+  .hero-bottom{display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;position:relative;z-index:2}
+  .btns{display:flex;gap:26px;align-items:center}
+  .btn{display:inline-block;background:var(--ink);color:#fff;padding:16px 30px;font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;border:1px solid var(--ink);cursor:pointer;transition:background .2s,color .2s}
+  .btn:hover{background:transparent;color:var(--ink)}
+  .link{font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;border-bottom:1px solid var(--ink);padding-bottom:3px}
+  .hero-year{font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;text-align:right}
+
+  /* 4 чёрных блока */
+  .features{background:var(--dark);color:#fff}
+  .features .grid{display:grid;grid-template-columns:repeat(4,1fr)}
+  .features article{padding:44px 28px 90px;border-right:1px solid rgba(255,255,255,.12);
+    background:linear-gradient(180deg,transparent 40%,rgba(255,255,255,.06))}
+  .features article:last-child{border-right:0}
+  .features h3{font-size:12px;letter-spacing:.12em;text-transform:uppercase;margin-bottom:10px}
+  .features p{font-size:12px;color:#b5b5b5;margin-bottom:16px}
+  .features a{font-size:10px;letter-spacing:.12em;text-transform:uppercase;font-weight:600}
+
+  /* серый блок «О нас» */
+  .about{background:linear-gradient(90deg,#d9d9d9,#8c8c8c);}
+  .about .wrap{display:grid;grid-template-columns:1.1fr .9fr;gap:40px;align-items:center;min-height:380px;padding-top:60px;padding-bottom:60px}
+  .eyebrow{font-size:10px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;margin-bottom:18px}
+  .about h2{font-size:clamp(34px,5vw,56px);font-weight:800;line-height:1.02;margin-bottom:22px}
+  .about p{max-width:380px;font-size:13px;margin-bottom:26px}
+  .about .pic{height:300px;background:#1a1a1a;overflow:hidden}
+  .about .pic img{display:block;width:100%;height:100%;object-fit:cover;object-position:center}
+
+  /* преимущества */
+  .perks{display:grid;grid-template-columns:repeat(5,1fr);gap:0;padding:34px 0;border-bottom:1px solid var(--line)}
+  .perks div{padding:0 18px;border-right:1px solid var(--line);font-size:11px}
+  .perks div:last-child{border-right:0}
+  .perks b{display:block;font-size:10px;letter-spacing:.12em;text-transform:uppercase;margin-bottom:4px}
+  .perks span{color:var(--muted)}
+
+  /* тарифы */
+  .tariffs{padding:50px 0 70px}
+  .tariffs .head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:22px}
+  .tariffs h2{font-size:15px;letter-spacing:.1em;text-transform:uppercase}
+  .cards{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+  .card{background:var(--dark);color:#fff;padding:170px 22px 22px;position:relative;overflow:hidden;isolation:isolate}
+  .card .card-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;z-index:-2;display:block}
+  .card::after{content:"";position:absolute;inset:0;z-index:-1;
+    background:linear-gradient(180deg,rgba(0,0,0,0) 30%,rgba(0,0,0,.55) 58%,rgba(0,0,0,.92) 85%,#0a0a0a 100%)}
+  .card .badge{position:absolute;top:0;left:0;background:#0a0a0a;color:#fff;font-size:9px;font-weight:600;letter-spacing:.1em;padding:6px 12px;text-transform:uppercase}
+  .card ul li{color:#e4e4e4}
+  .card h3{font-size:13px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:12px}
+  .card ul{list-style:none;font-size:11px;color:#bdbdbd;margin-bottom:22px;min-height:54px}
+  .card .row{display:flex;justify-content:space-between;align-items:center}
+  .card .price{font-size:20px;font-weight:600}
+  .card .btn{background:transparent;border-color:#fff;padding:10px 18px;font-size:10px}
+  .card .btn:hover{background:#fff;color:#000}
+
+  /* форма заявки */
+  .order{background:var(--dark);color:#fff;padding:60px 0}
+  .order .wrap{display:grid;grid-template-columns:1fr 1fr;gap:50px;align-items:center}
+  .order h2{font-size:clamp(28px,4vw,44px);font-weight:800;line-height:1.05}
+  .order form{display:grid;gap:12px}
+  .order input,.order select{width:100%;background:#161616;border:1px solid #333;color:#fff;padding:15px 16px;font:inherit;font-size:13px}
+  .order input:focus,.order select:focus{outline:2px solid #fff;outline-offset:2px}
+  .order .btn{background:#fff;color:#000;border-color:#fff}
+  .order .btn:hover{background:transparent;color:#fff}
+
+  /* подвал */
+  footer{background:#000;color:#fff;padding:44px 0 24px;font-size:11px}
+  footer .cols{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:30px}
+  footer h4{font-size:10px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:12px}
+  footer li{list-style:none;color:#9a9a9a;margin-bottom:6px}
+  footer .logo{text-align:left;font-size:32px;padding-left:0}
+  footer .logo small{font-size:11px;padding-left:0;margin-top:6px}
+  footer .copy{margin-top:30px;color:#666;text-align:center;font-size:10px}
+
+  /* ===== вкладка «О нас» внутри сайта ===== */
+  [hidden]{display:none!important}
+  body.is-about{background:#000;color:#fff}
+  body.is-about .topbar{border-bottom:1px solid rgba(255,255,255,.14)}
+  #page-about{--muted2:#a8a8a8;--line2:rgba(255,255,255,.14);--panel:#0f0f0f;background:#000;color:#fff}
+  #page-about .btn{background:#fff;color:#000;border-color:#fff}
+  #page-about .btn:hover{background:transparent;color:#fff}
+  #page-about .btn.ghost{background:transparent;color:#fff;border-color:rgba(255,255,255,.5)}
+  #page-about .btn.ghost:hover{background:#fff;color:#000}
+  #page-about .eyebrow{font-size:10px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--muted2);margin-bottom:18px}
+  #page-about h2{font-size:clamp(28px,3.6vw,44px);font-weight:800;line-height:1.1}
+  #page-about img{display:block;max-width:100%}
+
+  #page-about .intro{padding:70px 0 80px}
+  #page-about .intro .wrap{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center}
+  #page-about .intro h1{font-size:clamp(38px,5.6vw,72px);font-weight:800;line-height:1.02;margin-bottom:26px}
+  #page-about .lead{font-size:15px;color:#d6d6d6;max-width:480px;margin-bottom:34px}
+  #page-about .actions{display:flex;gap:16px;flex-wrap:wrap}
+  #page-about .photo{aspect-ratio:1/1;overflow:hidden;border:1px solid var(--line2)}
+  #page-about .photo img{width:100%;height:100%;object-fit:cover}
+
+  #page-about .block{padding:80px 0;border-top:1px solid var(--line2)}
+  #page-about .two{display:grid;grid-template-columns:.8fr 1.2fr;gap:60px}
+  #page-about .text p{color:#cfcfcf;font-size:15px;margin-bottom:18px;max-width:640px}
+
+  #page-about .services,#page-about .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:44px}
+  #page-about .service{background:var(--panel);border:1px solid var(--line2);padding:28px 24px 34px}
+  #page-about .service span{display:block;font-size:11px;font-weight:600;letter-spacing:.2em;color:var(--muted2);margin-bottom:34px}
+  #page-about .service h3,#page-about .step h3,#page-about .value h3{font-size:13px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px}
+  #page-about .service p,#page-about .step p,#page-about .value p{font-size:12.5px;color:var(--muted2)}
+
+  #page-about .values{display:grid;grid-template-columns:repeat(3,1fr);margin-top:44px;border-top:1px solid var(--line2)}
+  #page-about .value{padding:30px 28px 10px 0}
+  #page-about .value + .value{padding-left:28px;border-left:1px solid var(--line2)}
+
+  #page-about .steps{counter-reset:s}
+  #page-about .step{border-top:1px solid #fff;padding-top:18px;counter-increment:s}
+  #page-about .step::before{content:"0" counter(s);display:block;font-size:11px;font-weight:600;letter-spacing:.2em;color:var(--muted2);margin-bottom:12px}
+
+  #page-about .cta{padding:90px 0;border-top:1px solid var(--line2);text-align:center}
+  #page-about .cta h2{max-width:720px;margin:0 auto 18px}
+  #page-about .cta p{color:var(--muted2);margin-bottom:32px;font-size:14px}
+
+  @media(max-width:900px){
+    #page-about .intro .wrap,#page-about .two{grid-template-columns:1fr;gap:34px}
+    #page-about .services,#page-about .steps{grid-template-columns:1fr 1fr}
+    #page-about .values{grid-template-columns:1fr}
+    #page-about .value + .value{padding-left:0;border-left:0;border-top:1px solid var(--line2);margin-top:20px;padding-top:24px}
+  }
+  @media(max-width:560px){
+    #page-about .services,#page-about .steps{grid-template-columns:1fr}
+    #page-about .intro{padding:40px 0 56px}
+    #page-about .block{padding:56px 0}
+  }
+
+  /* мобильная версия */
+  .burger{display:none}
+  @media(max-width:900px){
+    header nav ul{display:none}
+    header nav{flex-direction:column;gap:16px;justify-content:center}
+    .nav-phone{font-size:16px;padding:11px 18px}
+    .burger{display:inline-flex;align-items:center;gap:10px;background:none;border:1px solid var(--ink);color:var(--ink);font:inherit;font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;padding:11px 18px;cursor:pointer}
+    .burger i,.burger i::before,.burger i::after{display:block;width:18px;height:2px;background:var(--ink);position:relative;transition:transform .2s,background .2s}
+    .burger i::before,.burger i::after{content:"";position:absolute;left:0}
+    .burger i::before{top:-6px}
+    .burger i::after{top:6px}
+    header nav.open .burger i{background:transparent}
+    header nav.open .burger i::before{top:0;transform:rotate(45deg)}
+    header nav.open .burger i::after{top:0;transform:rotate(-45deg)}
+    header nav.open ul{display:flex;flex-direction:column;align-items:center;gap:0;width:100%;border-top:1px solid var(--line)}
+    header nav.open ul li{width:100%;text-align:center;border-bottom:1px solid var(--line)}
+    header nav.open ul a{display:block;padding:15px 0;font-size:13px}
+    .features .grid,.cards,.perks{grid-template-columns:1fr 1fr}
+    .about .wrap,.order .wrap{grid-template-columns:1fr}
+    footer .cols{grid-template-columns:1fr 1fr}
+  }
+  @media(max-width:560px){
+    .features .grid,.cards,.perks{grid-template-columns:1fr}
+    .topbar .wrap span:last-child{display:none}
+    .hero-bottom{flex-direction:column;align-items:flex-start}
+    .hero .wrap{min-height:0}
+    .hero .tagline{position:static;margin-bottom:10px}
+    .hero-stage{min-height:0;margin-top:10px}
+    .hero-man{height:430px;min-height:0}
+    .hero-word{font-size:27vw;top:42%}
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar"><div class="wrap"><span>УБОРКА В ДЕНЬ ОБРАЩЕНИЯ — ЗАКАЖИТЕ ДО 14:00</span><span>ВЫЕЗД ПО ВСЕМУ ГОРОДУ</span></div></div>
+
+<header>
+  <div class="wrap">
+    <nav>
+      <ul><li><a href="#top">Главная</a></li><li><a href="#services">Услуги</a></li><li><a href="#/about">О нас</a></li><li><a href="#prices">Цены</a></li></ul>
+      <a class="logo" href="#top">MAFIA<small>cleaning</small></a>
+      <a class="nav-phone" href="tel:+79092118773">+7 909 211 87 73</a>
+      <button class="burger" type="button" aria-label="Открыть меню" aria-expanded="false"><i></i>Меню</button>
+    </nav>
+  </div>
+</header>
+
+<div id="page-home">
+
+<section class="hero" id="top">
+  <div class="wrap" style="position:relative">
+    <h1 class="sr-only">MAFIA cleaning — клининг для дома и офиса</h1>
+    <p class="tagline">Порядок без забот.<br>Чистота без компромиссов.<br>Результат с гарантией.</p>
+    <div class="hero-stage">
+      <div class="hero-word" aria-hidden="true">MAFIA</div>
+      <img class="hero-man" src="banner%20main/man.png" alt="Мастер клининга в пальто и шляпе с бутылкой-распылителем">
+    </div>
+    <div class="hero-bottom">
+      <div class="btns"><a class="btn" href="#order">Заказать уборку</a><a class="link" href="#prices">Смотреть цены</a></div>
+      <p class="hero-year">Работаем<br>ежедневно 8:00–22:00</p>
+    </div>
+  </div>
+</section>
+
+<section class="features" id="services">
+  <div class="wrap grid">
+    <article><h3>Уборка квартир</h3><p>Поддерживающая и генеральная уборка под ключ.</p><a href="#order">Заказать</a></article>
+    <article><h3>Уборка офисов</h3><p>Регулярная уборка по графику, без остановки работы.</p><a href="#order">Заказать</a></article>
+    <article><h3>После ремонта</h3><p>Вывоз строительной пыли и следов отделки.</p><a href="#order">Заказать</a></article>
+    <article><h3>Мытьё окон</h3><p>Окна, балконы и фасады любой высоты.</p><a href="#order">Заказать</a></article>
+  </div>
+</section>
+
+<section class="about" id="about">
+  <div class="wrap">
+    <div>
+      <p class="eyebrow">О нас</p>
+      <h2>Чисто.<br>Быстро.<br>Надёжно.</h2>
+      <p>Приезжаем с оборудованием и безопасной химией. Если что-то не устроило — переделаем бесплатно.</p>
+      <a class="btn" href="#/about">Узнать подробнее</a>
+    </div>
+    <div class="pic"><img src="banner%20second/photo2.jpg" alt="MAFIA cleaning"></div>
+  </div>
+</section>
+
+<div class="wrap">
+  <div class="perks">
+    <div><b>Гарантия</b><span>Переделаем бесплатно</span></div>
+    <div><b>Своё оборудование</b><span>Привозим всё сами</span></div>
+    <div><b>Безопасная химия</b><span>Подходит детям и животным</span></div>
+    <div><b>Проверенные мастера</b><span>Обучены и застрахованы</span></div>
+    <div><b>Оплата после</b><span>Платите, когда довольны</span></div>
+  </div>
+</div>
+
+<section class="tariffs" id="prices">
+  <div class="wrap">
+    <div class="head"><h2>Выберите уборку</h2><a class="link" href="#order">Все услуги</a></div>
+    <div class="cards">
+      <div class="card"><img class="card-img" src="banner%20first/уборка1.jpg" alt="Базовая уборка"><h3>Базовая</h3><ul><li>Влажная уборка</li><li>Пыль, полы, санузел</li></ul><div class="row"><span class="price">от 2 500 ₽</span><a class="btn" href="#order">Заказать</a></div></div>
+      <div class="card"><img class="card-img" src="banner%20first/уборка2.jpg" alt="Генеральная уборка"><span class="badge">Популярно</span><h3>Генеральная</h3><ul><li>Всё из базовой</li><li>Кухня, техника, плинтусы</li></ul><div class="row"><span class="price">от 5 000 ₽</span><a class="btn" href="#order">Заказать</a></div></div>
+      <div class="card"><img class="card-img" src="banner%20first/уборка3.jpg" alt="Уборка после ремонта"><h3>После ремонта</h3><ul><li>Удаление строительной пыли</li><li>Мытьё окон и стен</li></ul><div class="row"><span class="price">от 8 000 ₽</span><a class="btn" href="#order">Заказать</a></div></div>
+      <div class="card"><img class="card-img" src="banner%20first/уборка%204.png" alt="Уборка офиса"><h3>Для офиса</h3><ul><li>Уборка по графику</li><li>Договор и отчётность</li></ul><div class="row"><span class="price">от 12 000 ₽</span><a class="btn" href="#order">Заказать</a></div></div>
+    </div>
+  </div>
+</section>
+
+<section class="order" id="order">
+  <div class="wrap">
+    <div>
+      <h2>Оставьте заявку — перезвоним за 10 минут</h2>
+    </div>
+    <form id="order-form" action="https://formsubmit.co/don.mafia.cleaning@gmail.com" method="POST">
+      <input type="text" name="Имя" placeholder="Ваше имя" required maxlength="60" autocomplete="name" aria-label="Ваше имя">
+      <input type="tel" name="Телефон" placeholder="Телефон" required maxlength="20" minlength="10" pattern="[0-9+()\-\s]{10,20}" title="Введите номер телефона, например +7 909 000 00 00" autocomplete="tel" inputmode="tel" aria-label="Телефон">
+      <select name="Услуга" aria-label="Услуга"><option>Базовая уборка</option><option>Генеральная уборка</option><option>После ремонта</option><option>Уборка офиса</option></select>
+      <!-- служебные поля для отправки на почту -->
+      <input type="hidden" name="_subject" value="Новая заявка с сайта MAFIA cleaning">
+      <input type="hidden" name="_template" value="table">
+      <input type="hidden" name="_captcha" value="false">
+      <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off">
+      <button class="btn" type="submit">Отправить заявку</button>
+      <p id="order-status" role="status" style="font-size:13px;min-height:20px"></p>
+    </form>
+  </div>
+</section>
+
+</div><!-- /page-home -->
+
+<!-- ВКЛАДКА «О НАС» (внутри сайта) -->
+<div id="page-about" hidden>
+  <section class="intro">
+    <div class="wrap">
+      <div>
+        <p class="eyebrow">О компании</p>
+        <h1>Мы наводим порядок. Как положено.</h1>
+        <p class="lead">MAFIA cleaning — клининговая команда, которая берёт на себя всё, что связано с чистотой в вашем доме и офисе. Вы занимаетесь делами, мы — уборкой. Без лишних слов и без компромиссов в результате.</p>
+        <div class="actions">
+          <a class="btn" href="#order">Заказать уборку</a>
+          <a class="btn ghost" href="#prices">Смотреть цены</a>
+        </div>
+      </div>
+      <div class="photo">
+        <img src="first%20io/dona.png" alt="Мастер MAFIA cleaning со шваброй">
+      </div>
+    </div>
+  </section>
+
+  <section class="block">
+    <div class="wrap two">
+      <div>
+        <p class="eyebrow">Кто мы</p>
+        <h2>Чистота — это наше дело</h2>
+      </div>
+      <div class="text">
+        <p>Мы работаем как команда, где у каждого своя роль и своя ответственность. Мастера приезжают вовремя, с собственным профессиональным оборудованием и безопасной химией, и делают свою работу аккуратно — от первой пылинки до последнего блика на стекле.</p>
+        <p>Мы убираем квартиры, дома и офисы, наводим порядок после ремонта и моем окна на любой высоте. Для нас нет «мелочей»: плинтусы, фурнитура, труднодоступные углы — всё входит в работу, а не в доплату.</p>
+        <p>Если результат вас не устроил — мы вернёмся и переделаем бесплатно. А платите вы только тогда, когда довольны.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="block">
+    <div class="wrap">
+      <p class="eyebrow">Чем занимаемся</p>
+      <h2>Услуги MAFIA cleaning</h2>
+      <div class="services">
+        <article class="service"><span>01</span><h3>Уборка квартир</h3><p>Поддерживающая и генеральная уборка под ключ: кухня, санузел, комнаты, техника.</p></article>
+        <article class="service"><span>02</span><h3>Уборка офисов</h3><p>Регулярная уборка по графику, без остановки работы. Договор и отчётность.</p></article>
+        <article class="service"><span>03</span><h3>После ремонта</h3><p>Удаляем строительную пыль, следы отделки, моем окна и стены.</p></article>
+        <article class="service"><span>04</span><h3>Мытьё окон</h3><p>Окна, балконы и фасады любой высоты — до идеальной прозрачности.</p></article>
+      </div>
+    </div>
+  </section>
+
+  <section class="block">
+    <div class="wrap">
+      <p class="eyebrow">Наши принципы</p>
+      <h2>Почему выбирают нас</h2>
+      <div class="values">
+        <div class="value"><h3>Гарантия результата</h3><p>Остались недочёты — переделаем бесплатно. Мы отвечаем за свою работу.</p></div>
+        <div class="value"><h3>Безопасная химия</h3><p>Используем средства, безопасные для детей и домашних животных, без резкого запаха.</p></div>
+        <div class="value"><h3>Проверенные мастера</h3><p>Наши сотрудники обучены, аккуратны и застрахованы. Вы можете спокойно доверить им дом.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block">
+    <div class="wrap">
+      <p class="eyebrow">Как это работает</p>
+      <h2>Четыре шага до чистоты</h2>
+      <div class="steps">
+        <div class="step"><h3>Заявка</h3><p>Оставляете заявку на сайте или звоните — перезвоним в течение 10 минут.</p></div>
+        <div class="step"><h3>Расчёт</h3><p>Уточняем задачу и называем точную стоимость. Без скрытых платежей.</p></div>
+        <div class="step"><h3>Уборка</h3><p>Мастера приезжают с оборудованием и химией и наводят порядок.</p></div>
+        <div class="step"><h3>Оплата</h3><p>Принимаете работу и платите, только когда всё вас устраивает.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta">
+    <div class="wrap">
+      <h2>Готовы навести порядок?</h2>
+      <p>Оставьте заявку — перезвоним за 10 минут. Работаем ежедневно с 8:00 до 22:00.</p>
+      <a class="btn" href="#order">Оставить заявку</a>
+      <p style="margin:26px 0 0"><a class="phone-big" style="margin-top:0" href="tel:+79092118773">+7 909 211 87 73</a></p>
+    </div>
+  </section>
+</div>
+
+<footer>
+  <div class="wrap">
+    <div class="cols">
+      <div><div class="logo">MAFIA<small>cleaning</small></div><p style="color:#9a9a9a;margin-top:10px">Профессиональный клининг для дома и офиса.</p></div>
+      <div><h4>Услуги</h4><ul><li>Квартиры</li><li>Офисы</li><li>После ремонта</li><li>Окна</li></ul></div>
+      <div><h4>Компания</h4><ul><li>О нас</li><li>Цены</li><li>Отзывы</li><li>Контакты</li></ul></div>
+      <div><h4>Связь</h4><ul><li><a href="tel:+79092118773" style="color:#fff;font-weight:600">+7 909 211 87 73</a></li><li>hello@mafia-cleaning.ru</li><li>Ежедневно 8:00–22:00</li></ul></div>
+    </div>
+    <p class="copy">© 2026 MAFIA cleaning. Все права защищены.</p>
+  </div>
+</footer>
+
+<script>
+  /* мобильное меню */
+  (function(){
+    var nav = document.querySelector('header nav');
+    var btn = nav.querySelector('.burger');
+    btn.addEventListener('click', function(){
+      var open = nav.classList.toggle('open');
+      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+    nav.querySelectorAll('ul a').forEach(function(a){
+      a.addEventListener('click', function(){
+        nav.classList.remove('open');
+        btn.setAttribute('aria-expanded', 'false');
+      });
+    });
+  })();
+
+  /* отправка заявки на почту без перезагрузки страницы */
+  (function(){
+    var form = document.getElementById('order-form');
+    var status = document.getElementById('order-status');
+    var btn = form.querySelector('button[type=submit]');
+    var lastSent = 0;
+    form.addEventListener('submit', function(e){
+      e.preventDefault();
+      /* защита от ботов: скрытое поле-ловушка заполнено — делаем вид, что всё хорошо, но ничего не отправляем */
+      if (form.querySelector('[name=_honey]').value){ return; }
+      /* защита от спама: не чаще одной заявки в 30 секунд */
+      if (Date.now() - lastSent < 30000){
+        status.style.color = '#ff8a8a';
+        status.textContent = 'Заявка уже отправлена. Подождите немного перед повторной отправкой.';
+        return;
+      }
+      lastSent = Date.now();
+      btn.disabled = true;
+      status.style.color = '#fff';
+      status.textContent = 'Отправляем…';
+      fetch('https://formsubmit.co/ajax/don.mafia.cleaning@gmail.com', {
+        method: 'POST',
+        headers: {'Accept': 'application/json'},
+        body: new FormData(form)
+      })
+      .then(function(r){ return r.json(); })
+      .then(function(d){
+        if (d && (d.success === 'true' || d.success === true)){
+          status.textContent = 'Спасибо! Заявка отправлена, мы скоро свяжемся с вами.';
+          form.reset();
+        } else {
+          throw new Error('fail');
+        }
+      })
+      .catch(function(){
+        status.style.color = '#ff8a8a';
+        status.textContent = 'Не удалось отправить заявку. Позвоните нам или попробуйте ещё раз.';
+      })
+      .then(function(){ btn.disabled = false; });
+    });
+  })();
+
+  /* переключение между главной и вкладкой «О нас» без перезагрузки */
+  (function(){
+    var home = document.getElementById('page-home');
+    var about = document.getElementById('page-about');
+    var wasAbout = false;
+    function route(){
+      var isAbout = location.hash === '#/about';
+      home.hidden = isAbout;
+      about.hidden = !isAbout;
+      document.body.classList.toggle('is-about', isAbout);
+      if (isAbout){
+        window.scrollTo(0,0);
+      } else {
+        var target = null;
+        if (location.hash.length > 1){
+          try { target = document.querySelector(location.hash); } catch(e){}
+        }
+        if (target){ target.scrollIntoView(); }
+        else if (wasAbout){ window.scrollTo(0,0); }
+      }
+      wasAbout = isAbout;
+    }
+    window.addEventListener('hashchange', route);
+    route();
+  })();
+</script>
+</body>
+</html>
